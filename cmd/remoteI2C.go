@@ -1,12 +1,11 @@
-package cmd
+package main
 
 import (
-	"BBB_remotes/pkg/oscmanager"
 	"bufio"
 	"encoding/hex"
 	"fmt"
 	"github.com/bitfield/script"
-	"os"
+	"goReadRemote_i2cget/pkg/oscmanager"
 	"strings"
 )
 
@@ -51,20 +50,22 @@ func execWithBufferedReader(scriptPath string) {
 	}
 
 	fmt.Println(data)
-	os.Exit(0)
+	//os.Exit(0)
 
 	// if we wanted an explicit thing we could just run here.
 	//data := "ssh root@192.168.1.132 'while :; do echo $(i2cget -y 2 0x20 0x12); sleep 0.1; done'"
 
-	pipe := script.Exec(data)
+	for _, cmd := range strings.Split(data, "\n") {
+		pipe := script.Exec(cmd)
+		scanner := bufio.NewScanner(pipe.Reader)
 
-	scanner := bufio.NewScanner(pipe.Reader)
-
-	for scanner.Scan() {
-		m := scanner.Text()
-		fmt.Println(m)
-		//hexToParallel(m)
+		for scanner.Scan() {
+			m := scanner.Text()
+			fmt.Println(m)
+			//hexToParallel(m)
+		}
 	}
+
 }
 
 func handle(err error) {
