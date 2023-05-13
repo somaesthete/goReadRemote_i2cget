@@ -11,13 +11,14 @@ func handle(err error) {
 	fmt.Printf("oops %s", err)
 }
 
-func HexToParallelSanitizeWord(inputWordRaw string) (wordBool []bool) {
+func HexToParallelSanitizeWord(inputWordRaw string) (wordBool [][]bool) {
 
 	var sanitizedWords string
-	targetMatch := regexp.MustCompile(`^0x[0-9a-fA-F]{4} 0x[0-9a-fA-F]{4} 0x[0-9a-fA-F]{4} 0x[0-9a-fA-F]{4}$`)
+	targetMatch := regexp.MustCompile(`^0x[0-9a-fA-F]{2} 0x[0-9a-fA-F]{2} 0x[0-9a-fA-F]{2} 0x[0-9a-fA-F]{2}`)
 
 	if !targetMatch.MatchString(inputWordRaw) {
 		handle(fmt.Errorf("inputWordRaw %s does not match targetMatch %s", inputWordRaw, targetMatch))
+		return nil
 	} else {
 		sanitizedWords = inputWordRaw
 	}
@@ -29,21 +30,17 @@ func HexToParallelSanitizeWord(inputWordRaw string) (wordBool []bool) {
 		handle(fmt.Errorf("should be 4 words, got %d", len(words)))
 		return nil
 	} else {
-		return append(append(append(HexToParallelOneByte(words[0]),
-			HexToParallelOneByte(words[1])...),
-			HexToParallelOneByte(words[2])...),
-			HexToParallelOneByte(words[3])...)
+		boolsArr := [][]bool{HexToParallelOneByte(words[0]),
+			HexToParallelOneByte(words[1]),
+			HexToParallelOneByte(words[2]),
+			HexToParallelOneByte(words[3]),
+		}
+		return boolsArr
 	}
-
-	fmt.Printf("words: %v\n", words)
-
-	// not. needs implemented.
-	return []bool{true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false}
-
 }
 
 func HexToParallelOneByte(byteStr string) (byteBool []bool) {
-	sanitizedByteStr := strings.Trim(byteStr, "0x")
+	sanitizedByteStr := strings.TrimPrefix(byteStr, "0x")
 
 	decodedByte, err := hex.DecodeString(sanitizedByteStr)
 	if err != nil {
@@ -63,7 +60,7 @@ func HexToParallelOneByte(byteStr string) (byteBool []bool) {
 		(b&0x1)>>0 == 1,
 	}
 
-	fmt.Printf("%v", valuesDecode)
+	fmt.Printf("%v\n", valuesDecode)
 	return valuesDecode
 
 	// side effect!

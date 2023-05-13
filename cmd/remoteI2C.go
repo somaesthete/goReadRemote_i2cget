@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/bitfield/script"
+	"goReadRemote_i2cget/pkg/hexToParallel"
 	"strings"
 )
 
@@ -39,6 +40,8 @@ func execWithBufferedReader(scriptPath string) {
 			m := scanner.Text()
 			fmt.Println(m)
 			//hexToParallel(m)
+			outBits := hexToParallel.HexToParallelSanitizeWord(m)
+			fmt.Printf("\n\noutBits %v\n", outBits)
 		}
 	}
 
