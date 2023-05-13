@@ -10,5 +10,6 @@ require (
 require (
 	github.com/itchyny/gojq v0.12.12 // indirect
 	github.com/itchyny/timefmt-go v0.1.5 // indirect
+	github.com/leanovate/gopter v0.2.9 // indirect
 	mvdan.cc/sh/v3 v3.6.0 // indirect
 )

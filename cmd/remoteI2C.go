@@ -2,10 +2,8 @@ package main
 
 import (
 	"bufio"
-	"encoding/hex"
 	"fmt"
 	"github.com/bitfield/script"
-	"goReadRemote_i2cget/pkg/oscmanager"
 	"strings"
 )
 
@@ -18,28 +16,6 @@ func main() {
 
 	i2cReadPath := "scripts/i2c/scp_i2cGetOnRemote.sh"
 	execWithBufferedReader(i2cReadPath)
-
-}
-
-func hexToParallel(byteStr string) {
-	sanitizedByteStr := strings.Trim(byteStr, "0x")
-
-	decodedByte, err := hex.DecodeString(sanitizedByteStr)
-	if err != nil {
-		handle(err)
-	}
-
-	b := decodedByte[0]
-	fmt.Printf("%t - %t - %t - %t --- %t - %t - %t - %t\n",
-		oscmanager.SetSlotEnable(8, (b&0x80)>>7 == 1),
-		oscmanager.SetSlotEnable(7, (b&0x40)>>6 == 1),
-		oscmanager.SetSlotEnable(6, (b&0x20)>>5 == 1),
-		oscmanager.SetSlotEnable(5, (b&0x10)>>4 == 1),
-		oscmanager.SetSlotEnable(4, (b&0x8)>>3 == 1),
-		oscmanager.SetSlotEnable(3, (b&0x4)>>2 == 1),
-		oscmanager.SetSlotEnable(2, (b&0x2)>>1 == 1),
-		oscmanager.SetSlotEnable(1, (b&0x1)>>0 == 1),
-	)
 
 }
 
